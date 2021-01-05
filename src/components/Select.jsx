@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+const SelectContainer = styled.div`
     height: 2.5rem;
     background-color: var(--color-gray-900);
     display: flex;
@@ -36,33 +36,28 @@ const Container = styled.div`
     `}
   }
 `
-
 const SelectedOption = styled.span`
     margin-left: .25rem;
-    color: var(--color-gray-400);
+    color: ${props => props.isSelected ? `var(--color-white)` : `var(--color-gray-400)`};
     font-size: .875rem;
     font-weight: 500;
-    ${props => props.isSelected && `color: var(--color-white)`};
 `
-
-const Dropdown = styled.div`
+const SelectDropdown = styled.div`
     position: absolute;
     top: 2.5rem;
     background-color: var(--color-gray-800);
-    max-height: 0;
-    ${props => props.isActive && `max-height: 33vh`};
+    max-height: 33vh;
     transition: max-height .2s ease-in;
     overflow: hidden;
     width: 100%;
     z-index: var(--z-index-3);
 `
-const Options = styled.ul`
+const SelectOptions = styled.ul`
   list-style: none;
   color: white;
   overflow-y: auto;
 `
-
-const Option = styled.li`
+const SelectOption = styled.li`
   line-height: 2;
   transition: background-color .1s ease-in;
   font-size: .875rem;
@@ -72,18 +67,33 @@ const Option = styled.li`
     font-weight: 700;
   }
 `
+const SelectHiddenInput = styled.input`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  outline: none;
+  cursor: none;
+  pointer-events: none;
+`
 
 export default class Select extends React.Component {
     constructor(props) {
         super(props);
         this.containerRef = React.createRef();
+        this.hiddenInputRef = React.createRef();
         this.state = {
             options: props.options || [],
             isActive: props.isActive || false,
             canSearch: props.canSearch || false,
-            label: props.label || "",
-            selectedValue: props.selectedValue || props.label,
+            name: props.name || "",
+            label: props.label || 0,
+            value: props.value || 0,
         }
+        this.handleOptionSelect = this.handleOptionSelect.bind(this);
     }
 
     componentDidMount() {
@@ -112,13 +122,20 @@ export default class Select extends React.Component {
         this.setState({isActive: !this.state.isActive});
     }
 
-    handleOptionSelect = value => {
-        this.setState({selectedValue: value});
+    handleOptionSelect = (label, value) => {
+        this.hiddenInputRef.current.value = value;
+        this.props.onSelect(label, value, this.state.name);
+        this.setState({
+            label: label,
+            value: value
+        });
     }
 
     render() {
+        const options = this.props.options;
+
         return(
-            <Container
+            <SelectContainer
                 // onFocus={this.handleActivate}
                 onBlur={this.handleDeactivate.bind(this)}
                 onClick={this.toggleSelect.bind(this)}
@@ -126,28 +143,35 @@ export default class Select extends React.Component {
                 tabIndex={0}
                 role={'select'}
                 isActive={this.state.isActive}
+                name={this.props.name}
             >
-                <SelectedOption
-                    isSelected={this.state.selectedValue !== this.state.label && this.state.selectedValue !== ""}>
-                    {this.state.selectedValue || this.state.options[0].label}
+                <SelectedOption isSelected={this.state.value !== 0}>
+                    {this.state.value !== 0 ? this.state.label : this.state.name }
                 </SelectedOption>
-                <Dropdown isActive={this.state.isActive}>
-                    <Options>
-                        {this.state.options.map(option => {
-                           return (
-                               <Option
-                                   key={option.value}
-                                   isActive={this.state.isActive}
-                                   onClick={() => this.handleOptionSelect(option.label)}
-                               >
-                                       {option.label}
-                               </Option>
-                           )
-                        })}
-                    </Options>
-                </Dropdown>
-
-            </Container>
+                {this.state.isActive && (
+                    <SelectDropdown>
+                        <SelectOptions>
+                            {options.map(option => {
+                                return (
+                                    <SelectOption
+                                        key={option.label}
+                                        isActive={this.state.isActive}
+                                        onClick={() => this.handleOptionSelect(option.label, option.value)}
+                                    >
+                                        {option.label}
+                                    </SelectOption>
+                                )
+                            })}
+                        </SelectOptions>
+                    </SelectDropdown>
+                )}
+                <SelectHiddenInput
+                    tabIndex={-1}
+                    aria-hidden
+                    hidden={true}
+                    ref={this.hiddenInputRef}
+                />
+            </SelectContainer>
         )
     }
 }

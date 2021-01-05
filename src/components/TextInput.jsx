@@ -72,9 +72,9 @@ export default class TextInput extends React.Component {
         this.inputRef = React.createRef();
     }
 
-    updateValue(e) {
-        const value = e.target.value;
-        this.setState({value});
+    updateValue(value) {
+        this.setState({value: value});
+        if(this.props.onChange) this.props.onChange(value || null);
     }
 
     // toggleFocus() {
@@ -92,7 +92,7 @@ export default class TextInput extends React.Component {
                     isActive={value || isFocused}
                     onFocus={() => this.setState({ isFocused: true })}
                     onBlur={() => this.setState({ isFocused: false })}
-                    onChange={this.updateValue.bind(this)}
+                    onChange={e => this.updateValue(e.target.value)}
                 />
                 <Label isActive={isFocused || value !== "" || type === "date"}>{label}</Label>
             </InputContainer>
