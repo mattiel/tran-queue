@@ -24,7 +24,7 @@ const Global = createGlobalStyle`
   }
 
   thead > tr {
-    background-color: var(--color-gray-800);
+    background-color: var(--color-gray-900);
     height: 2.25rem;
     font-size: .875rem;
     text-align: left;
@@ -36,12 +36,12 @@ const Global = createGlobalStyle`
   }
 
   tr {
-    background-color: var(--color-gray-900);
+    background-color: var(--color-gray-800);
     height: 2.75rem;
     border-bottom: 1px solid var(--color-gray-900);
 
     &:hover {
-      //background-color: var(--color-gray-900);
+      background-color: var(--color-gray-700);
     }
   }
 

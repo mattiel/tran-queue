@@ -22,6 +22,7 @@ const TablePanel = styled.aside`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 2;
 `
 
 const TablePanelContainer = styled.div`
@@ -87,11 +88,11 @@ const Grid = styled.div `
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   grid-gap: 1px;
-  padding-bottom: 1px;
+  padding-bottom: 1rem;
   
-  & :first-child {
-    grid-column: 1 / -1;
-  }
+  //& :first-child {
+  //  grid-column: 1 / -1;
+  //}
 `
 
 export default function Query() {
