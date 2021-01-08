@@ -11,8 +11,8 @@ const InputContainer = styled.div`
 const Input = styled.input`
     height: 2.5rem;
     color: var(--color-white);
-    background-color: var(--color-gray-900);
-    padding: 1.25rem .25rem .25rem .25rem;
+    background-color: var(--color-gray-800);
+    padding: 1.25rem .5rem .25rem .5rem;
     border-bottom: 2px solid transparent;
     width: 100%;
 
@@ -39,7 +39,7 @@ const Input = styled.input`
 
 const Label = styled.label`
     position: absolute;
-    left: .25rem;
+    left: .5rem;
     will-change: transform;
     transition: transform .2s ease-in;
     transition-property: transform, top, left;

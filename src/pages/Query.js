@@ -80,6 +80,18 @@ const PanelSectionData = styled.div`
   color: var(--color-gray-800);
   font-size: .875rem;
   overflow-y: auto;
+  white-space: pre;
+`
+
+const Grid = styled.div `
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  grid-gap: 1px;
+  padding-bottom: 1px;
+  
+  & :first-child {
+    grid-column: 1 / -1;
+  }
 `
 
 export default function Query() {
@@ -138,7 +150,6 @@ export default function Query() {
     const [tablePanelIsOpen, setTablePanelIsOpen] = useState(false);
     const [tableClickedRowData, setTableClickedRowData] = useState("");
 
-
     return(
         <div className="query">
             <TableContext.Provider value={{ tableInstance, setTableInstance }}>
@@ -146,9 +157,9 @@ export default function Query() {
                     <TablePanel>
                         <TablePanelHeader>
                             데이터 조회
-                            <TablePanelHeaderClose
-                                onClick={() => setTablePanelIsOpen(false)}
-                            >닫기</TablePanelHeaderClose>
+                            <TablePanelHeaderClose onClick={() => setTablePanelIsOpen(false)}>
+                                닫기
+                            </TablePanelHeaderClose>
                         </TablePanelHeader>
                         <TablePanelContainer>
                             <TablePanelGrid>
@@ -158,7 +169,9 @@ export default function Query() {
                                             <PanelSection key={idx}>
                                                 <PanelSectionHeader>{key}</PanelSectionHeader>
                                                 <PanelSectionContent>
-                                                    <PanelSectionData>{tableClickedRowData[key] || "데이터가 없습니다"}</PanelSectionData>
+                                                    <PanelSectionData>
+                                                        {tableClickedRowData[key] || "데이터가 없습니다"}
+                                                    </PanelSectionData>
                                                 </PanelSectionContent>
                                             </PanelSection>
                                         )
@@ -170,19 +183,23 @@ export default function Query() {
 
                     </TablePanel>
                 )}
-                <TextInput
-                    label="전체 검색"
-                    onChange={value => tableInstance.setGlobalFilter(value)}
-                />
-                <TextInput
-                    label="에러 메시지"
-                    onChange={value => tableInstance.columns[6].setFilter(value)}
-                />
-                <TextInput
-                    label="등록 일자"
-                    type="date"
-                    onChange={value => tableInstance.columns[9].setFilter(value)}
-                />
+
+                <Grid>
+                    <TextInput
+                        label="전체 검색"
+                        onChange={value => tableInstance.setGlobalFilter(value)}
+                    />
+                    <TextInput
+                        label="에러 메시지"
+                        onChange={value => tableInstance.columns[6].setFilter(value)}
+                    />
+                    <TextInput
+                        label="등록 일자"
+                        type="date"
+                        onChange={value => tableInstance.columns[9].setFilter(value)}
+                    />
+                </Grid>
+
                 <Table
                     columns={columns}
                     data={data}
